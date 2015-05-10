@@ -4,5 +4,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import basinhopping 
 
-Requires numpy, matplotlib and scipy
-Google them if need be
+Requires numpy, matplotlib and scipy.
+[http://sourceforge.net/projects/numpy/files/latest/download]
+[http://sourceforge.net/projects/scipy/files/latest/download]
+[http://sourceforge.net/projects/matplotlib/files/latest/download?source=recommended]
+
+As in ReadMe, recommended to use Anaconda Spyder - comes with the three libraries mentioned.
+[https://3230d63b5fc54e62148e-c95ac804525aac4b6dba79b00b39d1d3.ssl.cf1.rackcdn.com/Anaconda-2.2.0-Windows-x86_64.exe]
