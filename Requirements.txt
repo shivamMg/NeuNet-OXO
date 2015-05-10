@@ -1,0 +1,8 @@
+imports (code extract):
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import basinhopping 
+
+Requires numpy, matplotlib and scipy
+Google them if need be
