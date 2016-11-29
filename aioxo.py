@@ -8,6 +8,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import basinhopping
 
+# Result weights `x` with (win, loss, draw) as (3018, 4139, 2843)
+SOLUTION = np.array([0.47927514, 0.28388039, 1.85315537, 1.39759117, 0.64848499,
+    -1.5260518, -0.14631876, -0.92872037, 0.53695426, -1.79791524, 1.53584087])
+
 
 # Reads current state of the board
 def EvaluateBoard(board):
@@ -44,7 +48,7 @@ def EvaluateBoard(board):
 
 
 # This initializes the neural network with a neuron for each square in the board (defaulting at 9) plus an input and output
-def InitNN(BOARD_SIZE):
+def InitNN(BOARD_SIZE, neurons):
     """Returns a matrix of randomly selected weights
     For board size 3, maximum weight will be 11
     """
@@ -67,7 +71,10 @@ def RunNN(nn, board):
     z = nn[:, 2:]
     # The Z variable is every other value - the neuron values
     return np.dot(w, np.tanh(np.dot(z, board.flatten().getT()) + x))
-    # The function is the activation function for the network. This takes the dot product of the transposed matrix of tahn'ed results and the input (i.e. the board state)
+    # The function is the "activation function" for the network. This takes the dot product of the transposed matrix of tahn'ed results and the input (i.e. the board state)
+    # tanh(weights * inputs + bias)
+    # tanh(z * flat_board_transpose + x)
+    # w?
 
 
 # Runs the AI by evaluating against every square in the board (and finds the 'best' move)
@@ -140,6 +147,8 @@ def NNvsRandomPlayer(ai):
 def TrainAI():
     """Result contains `x`: point where min is achieved and `fun`, the min value of function at that point
     """
+    neurons = 1
+
     def optthis(x):
         ai = np.matrix(x)
         thesum1 = []
@@ -154,39 +163,40 @@ def TrainAI():
         ev = -1 * ev
         return ev
 
-    ai2 = InitNN(BOARD_SIZE)
+    ai2 = InitNN(BOARD_SIZE, neurons)
     optresult = basinhopping(optthis, ai2, disp=True)
     return optresult
 
 
-BOARD_SIZE = 3
-neurons = 1
-board = np.matrix('0 0 0;0 0 0;0 0 0')
+if __name__ == '__main__':
+    BOARD_SIZE = 3
+    neurons = 1
+    board = np.matrix('0 0 0;0 0 0;0 0 0')
 
-labels = ('X', 'O', 'Draw')
-colors=('red', 'blue', 'gold')
+    labels = ('X', 'O', 'Draw')
+    colors=('red', 'blue', 'gold')
 
-print "Training NN"
-trained = TrainAI()
-print trained
-ai = np.matrix(trained.x)
+    print "Training NN"
+    trained = TrainAI()
+    print trained
+    ai = np.matrix(trained.x)
 
-print "BOARD with new ai"
-sizes = [0, 0, 0]
-for loop in range(10000):
-    result = NNvsRandomPlayer(ai)
-    if result == -1:
-        sizes[0] += 1
-    elif result == 1:
-        sizes[1] += 1
-    else:
-        sizes[2] += 1
-plt.pie(sizes,
-        explode=None,
-        labels=labels,
-        colors=colors,
-        autopct='%1.1f%%',
-        shadow=True)
-plt.axis('equal')
-plt.show()
-print sizes
+    print "BOARD with new ai"
+    sizes = [0, 0, 0]
+    for loop in range(10000):
+        result = NNvsRandomPlayer(ai)
+        if result == -1:
+            sizes[0] += 1
+        elif result == 1:
+            sizes[1] += 1
+        else:
+            sizes[2] += 1
+    plt.pie(sizes,
+            explode=None,
+            labels=labels,
+            colors=colors,
+            autopct='%1.1f%%',
+            shadow=True)
+    plt.axis('equal')
+    plt.show()
+    print sizes
